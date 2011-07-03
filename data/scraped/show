@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+import yaml
+import sys
+
+if __name__ == '__main__':
+    y = yaml.load( open(sys.argv[1]) )
+    print y['lyrics']
