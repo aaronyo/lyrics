@@ -23,6 +23,9 @@ def _make_song_path(artist, title):
     return os.path.join(REPO_DIR, path)
 
 def _dump(song, out):
+    # Doesn't look easy to get the yaml dumper to dump my
+    # songs in a highly readable way, so rolling my own
+    # yaml serialization for now.
     s = ''
     for k in FIELD_ORDER:
         if k not in song:
