@@ -16,6 +16,7 @@ def main():
     parser = optparse.OptionParser()
     parser.usage = 'usage: %prog SONG_URL|SONG_LIST_FILE ...'
     parser.add_option('-f', '--force', action='store_true', default=False)
+    parser.add_option('-r', '--no-request', action='store_true', default=False)
 
     (options, args) = parser.parse_args()
     
@@ -26,14 +27,16 @@ def main():
     
     cmd = args.pop(0)
     if cmd == 'update':
-        update_cmd(args)
+        update_cmd(args, options)
 
-def update_cmd(args):
+def update_cmd(args, options):
     if args[0].endswith('yaml'):
         song_list_file = args[0]
         songs = load_song_list( open(song_list_file) )
         for s in songs:
-            page = get_page(s['artist'], s['title'], url=s.get('lyrics-url', None))
+            page = get_page(s['artist'], s['title'], url=s.get('lyrics-url', None), request=not options.no_request)
+            if page == None:
+                continue
             lyrics = parse.extract_lyrics(page)
             repo.load(s['artist'], s['title'], default=s)
             s['lyrics'] = lyrics
@@ -49,9 +52,12 @@ def update_cmd(args):
         return
         
 
-def get_page(artist, title, url=None):
+def get_page(artist, title, url=None, request=True):
     cache_filename = make_song_path(artist, title)
     cache_path = os.path.join(CACHE_DIR, cache_filename)
+    if not request and not os.path.exists(cache_path):
+        return None
+
     if not os.path.exists(cache_path):
         song_url = url or make_song_url(artist,title)        
         try:
