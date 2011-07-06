@@ -32,15 +32,15 @@ def main():
 def update_cmd(args, options):
     if args[0].endswith('yaml'):
         song_list_file = args[0]
-        songs = load_song_list( open(song_list_file) )
-        for s in songs:
+        song_list = load_song_list( open(song_list_file) )
+        for s in song_list:
             page = get_page(s['artist'], s['title'], url=s.get('lyrics-url', None), request=not options.no_request)
             if page == None:
                 continue
             lyrics = parse.extract_lyrics(page)
-            repo.load(s['artist'], s['title'], default=s)
-            s['lyrics'] = lyrics
-            repo.save(s)
+            song = repo.load(s['artist'], s['title'], default=s)
+            song['lyrics'] = lyrics
+            repo.save(song)
 
     elif args[0].startswith('http://'):
         song_url = args[0]
