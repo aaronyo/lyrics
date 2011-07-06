@@ -3,7 +3,7 @@ import os.path
 import re
 
 FIELD_ORDER = ['artist', 'title', 'lyrics-url', 'lyrics']
-REPO_DIR = os.path.join( os.path.dirname(__file__), '..', 'data', 'master')
+REPO_DIR = os.path.join( os.path.dirname(__file__), '..', 'data', 'songs')
 
 def save(song):
     song_path = _make_song_path(song['artist'], song['title'])
