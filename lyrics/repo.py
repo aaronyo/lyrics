@@ -33,7 +33,8 @@ def _dump(song, out):
             
         s += k + ': '
         if k == 'lyrics':
-            lyrics = re.sub(r'\n', r'\n  ', song['lyrics'])
+            lyrics = re.sub(r'\r', r'', song['lyrics'])
+            lyrics = re.sub(r'\n\ *', r'\n  ', lyrics)
             s += '|'+lyrics
         else:
             s += song[k] + "\n"
