@@ -77,7 +77,7 @@ def make_song_path(artist, title):
     return path + '.html'
 
 def request_lyrics_page(url):
-    print 'retrieving: %s' % song_url
+    print 'retrieving: %s' % url
     # to prevent pissing off the lyrics host
     time.sleep(1)
     return urllib2.urlopen(url).read()
