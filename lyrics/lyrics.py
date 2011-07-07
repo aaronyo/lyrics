@@ -1,6 +1,7 @@
 import urllib2
 import optparse
 import yaml
+import count
 import re
 from pprint import pprint
 import time
@@ -9,6 +10,7 @@ import repo
 
 import parse
 
+DATA_DIR = os.path.join( os.path.dirname(__file__), '..', 'data')
 CACHE_DIR = os.path.join( os.path.dirname(__file__), '..', 'data', 'cache')
 LYRICS_HOST = 'http://www.lyricstime.com/'
 
@@ -28,6 +30,8 @@ def main():
     cmd = args.pop(0)
     if cmd == 'update':
         update_cmd(args, options)
+    if cmd == 'count':
+        count_cmd(args, options)
 
 def update_cmd(args, options):
     if args[0].endswith('yaml'):
@@ -51,6 +55,14 @@ def update_cmd(args, options):
         parser.print_help()
         return
         
+def count_cmd(args, options):
+    f_stop_words = open(os.path.join(DATA_DIR, 'stop_words.txt'))
+    stop_words = f_stop_words.read().split('\n')
+    song_list = repo.list()
+    for _, artist, title in song_list:
+        lyrics = repo.load(artist, title)['lyrics']
+        cnt = count.unique_words(lyrics, stop_words)
+        print "%(cnt)3d: %(artist)s - %(title)s" % locals()
 
 def get_page(artist, title, url=None, request=True):
     cache_filename = make_song_path(artist, title)

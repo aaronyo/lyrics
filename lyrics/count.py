@@ -41,7 +41,10 @@ def word_distribution( lyrics, stop_words ):
 
     l = [(v, k) for k, v in d.items()]
     sorted_distribution = sorted(l)
-    return sorted_distribution    
+    return sorted_distribution
+    
+def unique_words(lyrics, stop_words):
+    return len( word_distribution(lyrics, stop_words) )
     
 def print_summary( distrib ):
     print 'unique words: %i' % len(distrib)
